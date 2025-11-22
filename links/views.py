@@ -11,7 +11,6 @@ from .serializers import LinkSerializer, LinkCreateSerializer
 import re
 import logging
 
-# Optional logger for debugging (dev only)
 logger = logging.getLogger(__name__)
 
 CODE_REGEX = re.compile(r'^[A-Za-z0-9]{6,8}$')
@@ -26,7 +25,7 @@ def healthz(request):
 @api_view(['POST'])
 def create_link(request):
     """
-    Create a link.
+    Create a new short link.
     Request JSON:
       { "target": "https://...", "code": "optional6to8chars" }
     """
@@ -41,7 +40,7 @@ def create_link(request):
     if code and not CODE_REGEX.match(code):
         return Response({'error': 'code must match /^[A-Za-z0-9]{6,8}$/'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Return 409 if code already exists (and not deleted)
+    # If code exists (and not deleted) -> 409
     if Link.objects.filter(code=code, deleted=False).exists():
         return Response({'error': 'code already exists'}, status=status.HTTP_409_CONFLICT)
 
@@ -63,18 +62,18 @@ def link_detail(request, code):
     """
     GET: return stats for a single link.
     DELETE: soft-delete the link (set deleted=True).
-    This single view allows DRF browsable UI to show DELETE button.
+    Using one view for both methods allows DRF browsable UI to show DELETE button.
     """
     if request.method == 'GET':
         link = get_object_or_404(Link, code=code, deleted=False)
         serializer = LinkSerializer(link)
         return Response(serializer.data)
 
-    elif request.method == 'DELETE':
-        updated = Link.objects.filter(code=code, deleted=False).update(deleted=True)
-        if not updated:
-            return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
-        return Response({"ok": True}, status=status.HTTP_200_OK)
+    # DELETE
+    updated = Link.objects.filter(code=code, deleted=False).update(deleted=True)
+    if not updated:
+        return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
+    return Response({"ok": True}, status=status.HTTP_200_OK)
 
 
 def redirect_view(request, code):
@@ -89,18 +88,18 @@ def redirect_view(request, code):
         logger.debug("redirect_view: code not found: %s", code)
         return HttpResponseNotFound('Not Found')
 
-    # log for debugging
+    # Debug log before update
     logger.debug("redirect_view BEFORE update: code=%s clicks=%s target=%s", code, link.clicks, link.target_url)
 
-    # atomic increment & set last_clicked
+    # Atomic update
     Link.objects.filter(code=code).update(clicks=F('clicks') + 1, last_clicked=timezone.now())
 
-    # refresh instance if you want to inspect in logs
+    # Optionally refresh for logging
     try:
         link.refresh_from_db()
         logger.debug("redirect_view AFTER update: code=%s clicks=%s", code, link.clicks)
     except Exception:
-        # non-fatal; just continue to redirect
         logger.exception("Failed to refresh link after update for code=%s", code)
 
-    return redirect(link.target_url, permanent=False)  # 302
+    # Perform 302 redirect
+    return redirect(link.target_url, permanent=False)
