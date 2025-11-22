@@ -1,35 +1,7 @@
 
 # TinyLink — URL Shortener
 
-A minimal and clean implementation of TinyLink using **Django + PostgreSQL**, matching the complete assignment spec.
 
-Assignment Reference (uploaded internally):  
-`/mnt/data/Take-Home Assignment_ TinyLink (1) (2).pdf`
-
----
-
-## 🚀 Tech Stack
-
-### Backend
-- **Django**
-- **Django REST Framework (DRF)**
-
-### Database
-- **PostgreSQL**
-
-### Python Packages
-- `psycopg2-binary` — PostgreSQL driver  
-- `python-dotenv` — load `.env` variables  
-- `nanoid` — short code generator  
-- `dj-database-url` — Parse `DATABASE_URL`  
-- `djangorestframework`
-
-### Environment & Tools
-- **Python 3.8+**
-- **Virtualenv**
-- **Curl** (for API testing)
-
----
 
 ## 📁 Project Structure
 
