@@ -2,30 +2,13 @@
 # TinyLink — URL Shortener
 
 
-
-## 📁 Project Structure
-
-
-
-tinylink-django/
-│── tinylink_project/ # Django project
-│── links/ # App with models, views, routes
-│── templates/ # Minimal dashboard UI
-│── migrations/ # DB migration files
-│── .env.example # Example environment file
-│── README.md # This file
-│── curl_tests.sh # Autograder-style API tests
-│── requirements.txt
-│── manage.py
-
-
 ---
 
 ## ⚙️ Setup Instructions
 
-### 1️⃣ Create virtual environment
 
 ```bash
+1️⃣ Create virtual environment
 python -m venv .venv
 source .venv/bin/activate        # Linux/Mac
 # OR
