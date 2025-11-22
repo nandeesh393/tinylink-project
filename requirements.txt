@@ -1,6 +1,8 @@
-Django>=4.2
+Django
 djangorestframework
 psycopg2-binary
 python-dotenv
 nanoid
 dj-database-url
+gunicorn
+whitenoise
