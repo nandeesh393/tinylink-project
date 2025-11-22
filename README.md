@@ -1,5 +1,5 @@
-✅ FULL README.md (SINGLE TEXT BLOCK — COPY/PASTE AS IS)
-# TinyLink — Django URL Shortener
+
+# TinyLink — URL Shortener
 
 A minimal and clean implementation of TinyLink using **Django + PostgreSQL**, matching the complete assignment spec.
 
